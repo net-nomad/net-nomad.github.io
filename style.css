@@ -6,16 +6,23 @@ body {
     text-align: center;      /* Center all text on the page */
     margin: 0;
     padding: 0;
+    height: 100vh; /* Ensure the body takes up full height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Vertically center text */
+    align-items: center; /* Horizontally center text */
 }
 
 /* Headings styles */
 h1, h2, h3, h4, h5, h6 {
     color: white; /* Ensure headings are white */
+    text-align: center; /* Ensure headings are centered */
 }
 
 /* Paragraphs and text */
 p {
     color: white; /* Make sure paragraph text is white */
+    text-align: center; /* Ensure paragraphs are centered */
 }
 
 /* Link styles */
