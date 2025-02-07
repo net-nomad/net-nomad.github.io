@@ -1,7 +1,7 @@
 /* Global styles for the whole website */
 body {
     background-color: black; /* Black background */
-    color: white;            /* White text */
+    color: blue;            /* White text */
     font-family: Arial, sans-serif; /* Clean, readable font */
     text-align: center;      /* Center all text on the page */
     margin: 0;
