@@ -7,14 +7,13 @@ body {
     padding: 0;
     display: flex; /* Use flexbox for layout */
     height: 100vh; /* Ensure the body takes up the full height */
-    flex-direction: row; /* Side-by-side layout for sidebar and main content */
 }
 
 /* Sidebar styles */
 .sidebar {
     background-color: #141414; /* Slightly lighter black/gray background for sidebar */
     width: 250px; /* Set the width of the sidebar */
-    height: 100%; /* Make the sidebar span the full height of the page */
+    height: 100vh; /* Make the sidebar span the full height of the page */
     padding: 20px;
     position: fixed; /* Keep it in place even when scrolling */
     top: 0; /* Align it to the top */
@@ -48,11 +47,14 @@ body {
 .subtopics {
     display: none; /* Hide the sub-topics by default */
     margin-left: 20px; /* Indent the sub-topics slightly */
+    padding-left: 20px; /* Additional padding for better indentation */
+    list-style-type: none; /* Remove bullets */
 }
 
 .subtopics a {
     font-size: 16px; /* Slightly smaller font for sub-topics */
     margin-bottom: 8px; /* Space between sub-topics */
+    display: block; /* Make each link a block element to ensure they are stacked vertically */
 }
 
 /* Show sub-topics when toggled */
@@ -66,6 +68,7 @@ body {
     padding: 20px; /* Add padding for main content */
     width: calc(100% - 250px); /* Make the main content area take up the remaining space */
     text-align: center; /* Center the text in the main content */
+    background-color: black; /* Black background for the main content */
 }
 
 /* Headings styles */
