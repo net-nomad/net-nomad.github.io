@@ -1,29 +1,30 @@
-/* style.css */
+/* Global styles for the whole website */
 body {
-    background-color: black;
-    color: white;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    /* Center text globally */
-    background-color: white;
-    color: black;
-    font-family: Arial, sans-serif;
-    text-align: center; /* This centers all text inside the body */
+    background-color: black; /* Black background */
+    color: white;            /* White text */
+    font-family: Arial, sans-serif; /* Clean, readable font */
+    text-align: center;      /* Center all text on the page */
     margin: 0;
     padding: 0;
 }
 
-/* Optional: Center headings and links specifically */
-h1, h2, h3 {
-    text-align: center; /* Ensure headings are centered */
+/* Headings styles */
+h1, h2, h3, h4, h5, h6 {
+    color: white; /* Ensure headings are white */
 }
 
+/* Paragraphs and text */
+p {
+    color: white; /* Make sure paragraph text is white */
+}
+
+/* Link styles */
 a {
-    text-align: center; /* Center links */
-    display: inline-block; /* Required for proper alignment */
-    text-decoration: underline;
+    color: blue;             /* Blue text for links */
+    text-decoration: underline; /* Underline links */
 }
-.center {
-    text-align: center;
+
+/* Link hover effect */
+a:hover {
+    color: lightblue; /* Light blue color when hovering over links */
 }
