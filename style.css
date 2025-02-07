@@ -21,12 +21,20 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: start; /* Align links to the top of the sidebar */
+    text-align: center; /* Center everything in the sidebar */
 }
 
-/* Sidebar headings */
+/* Sidebar Image */
+.sidebar img {
+    width: 100px; /* Adjust image size */
+    height: 100px; /* Adjust image size */
+    border-radius: 50%; /* Make the image circular */
+    margin-bottom: 20px; /* Add space below the image */
+}
+
+/* Sidebar heading */
 .sidebar h2 {
     color: white; /* White color for sidebar heading */
-    text-align: center; /* Center the sidebar heading */
     margin-bottom: 20px; /* Add space below the heading */
 }
 
@@ -37,6 +45,12 @@ body {
     margin-bottom: 10px; /* Space between links */
     font-size: 18px; /* Adjust font size */
     cursor: pointer;
+}
+
+/* Github link */
+.sidebar .github-link {
+    font-size: 16px; /* Slightly smaller font for GitHub link */
+    margin-top: 20px;
 }
 
 .sidebar a:hover {
@@ -52,7 +66,7 @@ body {
 }
 
 .subtopics a {
-    font-size: 16px; /* Slightly smaller font for sub-topics */
+    font-size: 14px; /* Slightly smaller font for sub-topics */
     margin-bottom: 8px; /* Space between sub-topics */
     display: block; /* Make each link a block element to ensure they are stacked vertically */
 }
