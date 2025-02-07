@@ -4,28 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Blog</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        // JavaScript to toggle sub-topics visibility
+        function toggleSubtopics(event) {
+            const subtopics = event.target.nextElementSibling; // Get the next sibling (sub-topic list)
+            if (subtopics.style.display === "block") {
+                subtopics.style.display = "none"; // Hide the sub-topics
+            } else {
+                subtopics.style.display = "block"; // Show the sub-topics
+            }
+        }
+    </script>
 </head>
 <body>
     <!-- Sidebar -->
     <div class="sidebar">
-        <h2>net-nomad</h2>
-        <p style="font-size: 20px;">Topics</p>
-        <a href="tech/index.html">Browser Exploitation</a>
-        <a href="tech/index.html">Python</a>     
-        <a href="travel/index.html">C</a>
-        <a href="about.html">C++</a>
-        <a href="about.html">Intel Assembly</a>
-        <a href="about.html">ARM Assembly</a>
-        <a href="about.html">Javascript</a>
-        <a href="about.html">Debuggers</a>
-        <a href="about.html">Penetration Testing</a>
+        <h2>Blog Sections</h2>
+        
+        <!-- Topic 1 (Tech) -->
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">Tech</a>
+        <div class="subtopics">
+            <a href="tech/article1.html">Tech Sub-topic 1</a>
+            <a href="tech/article2.html">Tech Sub-topic 2</a>
+            <a href="tech/article3.html">Tech Sub-topic 3</a>
+        </div>
+        
+        <!-- Topic 2 (Travel) -->
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">Travel</a>
+        <div class="subtopics">
+            <a href="travel/article1.html">Travel Sub-topic 1</a>
+            <a href="travel/article2.html">Travel Sub-topic 2</a>
+            <a href="travel/article3.html">Travel Sub-topic 3</a>
+        </div>
+        
+        <!-- Topic 3 (Lifestyle) -->
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">Lifestyle</a>
+        <div class="subtopics">
+            <a href="lifestyle/article1.html">Lifestyle Sub-topic 1</a>
+            <a href="lifestyle/article2.html">Lifestyle Sub-topic 2</a>
+        </div>
+        
+        <!-- Other topics can be added here -->
     </div>
 
     <!-- Main content -->
     <div class="main-content">
-        <h1>Welcome to net-nomad!</h1>
-        <p>I'm net-nomad and this blog details my journey into offensive security, with a focus on browser exploitation, n-days, and zero-days.</p>
+        <h1>Welcome to My Blog</h1>
+        <p>This is where I write about various topics.</p>
+        <p>Choose a section from the sidebar to read more!</p>
     </div>
 </body>
 </html>
