@@ -56,7 +56,7 @@ body {
 /* Topics heading */
 .sidebar .topics-heading {
     font-size: 22px; /* Larger font size for "Topics" */
-    margin-bottom: 20px; /* Add space below the "Topics" heading */
+    margin-bottom: 5px; /* Add space below the "Topics" heading */
     text-align: center;
 }
 
