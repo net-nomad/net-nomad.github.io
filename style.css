@@ -35,6 +35,8 @@ body {
     width: 100px; /* Adjust image size */
     height: 100px; /* Adjust image size */
     border-radius: 50%; /* Make the image circular */
+    margin: 0 auto; /* Center the image horizontally */
+    display: block; /* Make the image a block element so margin: 0 auto works */
     margin-bottom: 20px; /* Add space below the image */
 }
 
