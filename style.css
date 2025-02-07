@@ -12,7 +12,7 @@ body {
 
 /* Sidebar styles */
 .sidebar {
-    background-color: #2f2f2f; /* Slightly lighter black/gray background for sidebar */
+    background-color: #141414; /* Slightly lighter black/gray background for sidebar */
     width: 250px; /* Set the width of the sidebar */
     height: 100%; /* Make the sidebar span the full height of the page */
     padding: 20px;
