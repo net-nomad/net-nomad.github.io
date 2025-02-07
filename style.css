@@ -24,6 +24,12 @@ body {
     text-align: center; /* Center everything in the sidebar */
 }
 
+/* Website name */
+.sidebar h1 {
+    font-size: 24px; /* Larger font size for the website name */
+    margin-bottom: 20px; /* Space below the website name */
+}
+
 /* Sidebar Image */
 .sidebar img {
     width: 100px; /* Adjust image size */
@@ -32,10 +38,16 @@ body {
     margin-bottom: 20px; /* Add space below the image */
 }
 
-/* Sidebar heading */
-.sidebar h2 {
-    color: white; /* White color for sidebar heading */
-    margin-bottom: 20px; /* Add space below the heading */
+/* GitHub link */
+.sidebar .github-link {
+    font-size: 16px; /* Slightly smaller font for GitHub link */
+    margin-bottom: 20px; /* Add space below the link */
+}
+
+/* Topics heading */
+.sidebar .topics-heading {
+    font-size: 22px; /* Larger font size for "Topics" */
+    margin-bottom: 20px; /* Add space below the "Topics" heading */
 }
 
 /* Links in the sidebar */
@@ -47,17 +59,7 @@ body {
     cursor: pointer;
 }
 
-/* Github link */
-.sidebar .github-link {
-    font-size: 16px; /* Slightly smaller font for GitHub link */
-    margin-top: 20px;
-}
-
-.sidebar a:hover {
-    color: lightblue; /* Change color on hover */
-}
-
-/* Hidden sub-topic list */
+/* Sub-topic list */
 .subtopics {
     display: none; /* Hide the sub-topics by default */
     margin-left: 20px; /* Indent the sub-topics slightly */
