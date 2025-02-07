@@ -1,16 +1,52 @@
 /* Global styles for the whole website */
 body {
-    background-color: black; /* Black background */
+    background-color: black; /* Black background for the whole website */
     color: white;            /* White text */
     font-family: Arial, sans-serif; /* Clean, readable font */
-    text-align: center;      /* Center all text on the page */
     margin: 0;
     padding: 0;
-    height: 100vh; /* Ensure the body takes up full height */
+    display: flex; /* Use flexbox for layout */
+    height: 100vh; /* Ensure the body takes up the full height */
+    flex-direction: row; /* Side-by-side layout for sidebar and main content */
+}
+
+/* Sidebar styles */
+.sidebar {
+    background-color: #2f2f2f; /* Slightly lighter black/gray background for sidebar */
+    width: 250px; /* Set the width of the sidebar */
+    height: 100%; /* Make the sidebar span the full height of the page */
+    padding: 20px;
+    position: fixed; /* Keep it in place even when scrolling */
+    top: 0; /* Align it to the top */
+    left: 0; /* Align it to the left */
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Vertically center text */
-    align-items: center; /* Horizontally center text */
+    justify-content: start; /* Align links to the top of the sidebar */
+}
+
+.sidebar h2 {
+    color: white; /* White color for sidebar heading */
+    text-align: center; /* Center the sidebar heading */
+    margin-bottom: 20px; /* Add space below the heading */
+}
+
+.sidebar a {
+    color: white; /* White text for links */
+    text-decoration: none; /* Remove underline from links */
+    margin-bottom: 10px; /* Space between links */
+    font-size: 18px; /* Adjust font size */
+}
+
+.sidebar a:hover {
+    color: lightblue; /* Change color on hover */
+}
+
+/* Main content area */
+.main-content {
+    margin-left: 250px; /* Offset the main content to the right of the sidebar */
+    padding: 20px; /* Add padding for main content */
+    width: calc(100% - 250px); /* Make the main content area take up the remaining space */
+    text-align: center; /* Center the text in the main content */
 }
 
 /* Headings styles */
