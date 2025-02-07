@@ -65,8 +65,8 @@ body {
 /* Sub-topic list */
 .subtopics {
     display: none; /* Hide the sub-topics by default */
-    margin-left: 20px; /* Indent the sub-topics slightly */
-    padding-left: 20px; /* Additional padding for better indentation */
+    margin-left: 0; /* Remove left margin to eliminate indentation */
+    padding-left: 0; /* Remove left padding to eliminate indentation */
     list-style-type: none; /* Remove bullets */
 }
 
