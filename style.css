@@ -39,10 +39,16 @@ body {
     margin-bottom: 20px; /* Add space below the image */
 }
 
+.sidebar .about-me {
+    font-size: 16px; /* Slightly smaller font for GitHub link */
+    margin-bottom: 20px; /* Add space below the link */
+    text-align: center;
+}
+
 /* GitHub link */
 .sidebar .github-link {
     font-size: 16px; /* Slightly smaller font for GitHub link */
-    margin-bottom: 40px; /* Add space below the link */
+    margin-bottom: 20px; /* Add space below the link */
     text-align: center;
 }
 
