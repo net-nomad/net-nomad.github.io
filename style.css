@@ -24,21 +24,40 @@ body {
     justify-content: start; /* Align links to the top of the sidebar */
 }
 
+/* Sidebar headings */
 .sidebar h2 {
     color: white; /* White color for sidebar heading */
     text-align: center; /* Center the sidebar heading */
     margin-bottom: 20px; /* Add space below the heading */
 }
 
+/* Links in the sidebar */
 .sidebar a {
     color: white; /* White text for links */
     text-decoration: none; /* Remove underline from links */
     margin-bottom: 10px; /* Space between links */
     font-size: 18px; /* Adjust font size */
+    cursor: pointer;
 }
 
 .sidebar a:hover {
     color: lightblue; /* Change color on hover */
+}
+
+/* Hidden sub-topic list */
+.subtopics {
+    display: none; /* Hide the sub-topics by default */
+    margin-left: 20px; /* Indent the sub-topics slightly */
+}
+
+.subtopics a {
+    font-size: 16px; /* Slightly smaller font for sub-topics */
+    margin-bottom: 8px; /* Space between sub-topics */
+}
+
+/* Show sub-topics when toggled */
+.show-subtopics {
+    display: block; /* Show sub-topics when this class is added */
 }
 
 /* Main content area */
