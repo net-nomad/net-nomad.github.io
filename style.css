@@ -5,18 +5,25 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    /* Center text globally */
+    background-color: white;
+    color: black;
+    font-family: Arial, sans-serif;
+    text-align: center; /* This centers all text inside the body */
+    margin: 0;
+    padding: 0;
 }
 
-h1 {
-    color: #0000FF;
-    font-size: 32px;
+/* Optional: Center headings and links specifically */
+h1, h2, h3 {
+    text-align: center; /* Ensure headings are centered */
 }
 
 a {
-    color: blue;
+    text-align: center; /* Center links */
+    display: inline-block; /* Required for proper alignment */
     text-decoration: underline;
 }
-
 .center {
     text-align: center;
 }
