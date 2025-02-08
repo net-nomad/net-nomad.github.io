@@ -90,7 +90,7 @@ body {
 
 /* Main content area */
 .main-content {
-    margin-left: 250px; /* Offset the main content to the right of the sidebar */
+    margin-left: 600px; /* Offset the main content to the right of the sidebar */
     padding: 20px; /* Add padding for main content */
     width: calc(100% - 250px); /* Make the main content area take up the remaining space */
     background-color: black; /* Black background for the main content */
