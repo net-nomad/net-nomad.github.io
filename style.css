@@ -93,7 +93,6 @@ body {
     margin-left: 250px; /* Offset the main content to the right of the sidebar */
     padding: 20px; /* Add padding for main content */
     width: calc(100% - 250px); /* Make the main content area take up the remaining space */
-    text-align: center; /* Center the text in the main content */
     background-color: black; /* Black background for the main content */
 }
 
@@ -106,7 +105,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Paragraphs and text */
 p {
     color: white; /* Make sure paragraph text is white */
-    max-width: 400px;  /* Sets the maximum width for the paragraph */
+    max-width: 1000px;  /* Sets the maximum width for the paragraph */
     line-height: 1.6;   /* Optional: Adjusts line height for better readability */
 }
 
