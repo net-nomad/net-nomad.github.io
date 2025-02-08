@@ -114,7 +114,7 @@ h1, h2, h3, h4, h5, h6 {
 p {
     color: white; /* Make sure paragraph text is white */
     max-width: 1000px; /* Sets the maximum width for the paragraph */
-    line-height: 1.6; /* Adjusts line height for better readability */
+    line-height: 0.9; /* Adjusts line height for better readability */
     text-align: left; /* Left-align paragraph text */
     margin-right: 20px; /* Ensure there's space on the right side so text doesn't touch the sidebar */
 }
