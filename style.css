@@ -90,16 +90,18 @@ body {
 
 /* Main content area */
 .main-content {
-    margin-left: 600px; /* Offset the main content to the right of the sidebar */
+    margin-left: 250px; /* Offset the main content to the right of the sidebar */
     padding: 20px; /* Add padding for main content */
     width: calc(100% - 250px); /* Make the main content area take up the remaining space */
     background-color: black; /* Black background for the main content */
+    overflow-x: hidden; /* Prevent horizontal overflow */
 }
 
 /* Headings styles */
 h2, h3, h4, h5, h6 {
     color: white; /* Ensure headings are white */
-    /* text-align: center; /* Ensure headings are centered */
+    text-align: left; /* Left-align all headings */
+    margin-bottom: 10px; /* Space below the headings */
 }
 
 /* Paragraphs and text */
@@ -107,6 +109,8 @@ p {
     color: white; /* Make sure paragraph text is white */
     max-width: 1000px;  /* Sets the maximum width for the paragraph */
     line-height: 1.6;   /* Optional: Adjusts line height for better readability */
+    text-align: left; /* Left-align paragraph text */
+    margin-right: 20px; /* Ensure there's space on the right side so text doesn't touch the sidebar */
 }
 
 /* Link styles */
