@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Blog</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        // JavaScript to toggle sub-topics visibility
+        function toggleSubtopics(event) {
+            const subtopics = event.target.nextElementSibling; // Get the next sibling (sub-topic list)
+            if (subtopics.style.display === "block") {
+                subtopics.style.display = "none"; // Hide the sub-topics
+            } else {
+                subtopics.style.display = "block"; // Show the sub-topics
+            }
+        }
+    </script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Website Name -->
+        <h1>net-nomad</h1>
+        
+        <!-- Profile Image -->
+        <img src="https://avatars.githubusercontent.com/u/198267592?v=4" alt="Profile Image"> <!-- Replace with your actual image URL -->
+
+        <a class="about-me" href="" target="_blank">About Me</a>
+        
+        <!-- GitHub link -->
+        <a class="github-link" href="https://github.com/net-nomad" target="_blank">My Github</a>
+        
+        <!-- Topics heading -->
+        <div class="topics-heading">Topics</div>
+        
+        <!-- Topic 1 (Tech) -->
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">Browser Exploitation</a>
+        <div class="subtopics">
+            <a href="tech/article1.html">Tech Sub-topic 1</a>
+            <a href="tech/article2.html">Tech Sub-topic 2</a>
+            <a href="tech/article3.html">Tech Sub-topic 3</a>
+        </div>
+        
+        <!-- Topic 2 (Travel) -->
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">Python</a>
+        <div class="subtopics">
+            <a href="travel/article1.html">The Fundamentals of Python</a>
+        </div>
+        
+        <!-- Topic 3 (Lifestyle) -->
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">C++</a>
+        <div class="subtopics">
+            <a href="lifestyle/article1.html">The Fundamentals of C++</a>
+        </div>
+
+        <!-- Topic 3 (Lifestyle) -->
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">Intel Assembly</a>
+        <div class="subtopics">
+            <a href="lifestyle/article1.html">The Fundamentals of Intel Assembly</a>
+        </div>
+
+        <!-- Topic 3 (Lifestyle) -->
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">Penetration Testing</a>
+        <div class="subtopics">
+            <a href="lifestyle/article1.html">?</a>
+        </div>
+
+        <!-- Topic 3 (Lifestyle) -->
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">ARM Assembly</a>
+        <div class="subtopics">
+            <a href="lifestyle/article1.html">The Fundamentals of ARM Assembly</a>
+        </div>
+
+        <!-- Topic 3 (Lifestyle) -->
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">JavaScript</a>
+        <div class="subtopics">
+            <a href="lifestyle/fundamentalsjs.html">The Fundamentals of JavaScript</a>
+        </div>
+
+        <!-- Topic 3 (Lifestyle) -->
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">C</a>
+        <div class="subtopics">
+            <a href="lifestyle/article1.html">The Fundamentals of C</a>
+        </div>
+
+        <!-- Topic 3 (Lifestyle) -->
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">Debuggers</a>
+        <div class="subtopics">
+            <a href="lifestyle/article1.html">?</a>
+        </div>
+    </div>
+    <!-- Main content -->
+    <div class="main-content">
+        <h1>The Fundamentals of JavaScript</h1>
+        <p>February 8, 2025</p>
+        <p>Recognizing the importance of understanding Javascript for browser exploitation, I've started with the basics. One has to learn to crawl before they can walk. I'm beginning my journey by getting a bit of context about JavaScript and when, where, and what it's used for.</p>
+        <p>Choose a section from the sidebar to read more!</p>
+    </div>
+</body>
+</html>
