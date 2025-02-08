@@ -90,9 +90,9 @@ body {
 
 /* Main content area */
 .main-content {
-    margin-left: 250px; /* Move the main content to the right, next to the sidebar (sidebar is 250px wide) */
+    margin-left: 800px; /* Move the main content to the right, next to the sidebar (sidebar is 250px wide) */
     padding: 20px; /* Add padding for the content */
-    width: calc(100% - 250px); /* Make sure the content width takes up the remaining space */
+    /* width: calc(100% - 250px); /* Make sure the content width takes up the remaining space */
     background-color: black; /* Black background for the main content */
     overflow-x: hidden; /* Prevent horizontal scrolling */
 }
