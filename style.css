@@ -9,6 +9,11 @@ body {
     height: 100vh; /* Ensure the body takes up the full height */
 }
 
+.container {
+    width: 600px;
+    margin: 0 auto;
+}
+
 /* Sidebar styles */
 .sidebar {
     background-color: #141414; /* Slightly lighter black/gray background for sidebar */
