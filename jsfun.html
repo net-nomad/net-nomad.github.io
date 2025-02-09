@@ -123,6 +123,8 @@
 function handleClick() {
     console.log("Element clicked!");
 }
+            
+document.getElementById("myButton").addEventListener("click", handleClick);
         </code></pre>  
         <p>Here, the `handleClick` function is triggered whenever the "click" event happens on the element with the ID `myButton`, thanks to `addEventListener()`.</p>
         <p>We first define the function named `handleClick`. This function contains the action you want to perform when the event occurs. In this case, when the "click" event happens, "Element clicked!" will be printed to the console.</p>
