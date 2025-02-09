@@ -14,7 +14,7 @@ body {
 
 .red-text {
   color: indianred; /* Use Indian Red color */
-  font-family: 'Roboto', sans-serif; /* Example custom font */
+  font-family: 'Courier New', Courier, monospace; /* Example custom font */
 }
 
 /* Sidebar styles */
