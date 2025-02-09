@@ -148,6 +148,45 @@ console.log(result);
         <p>After defining the function, we call the function using `addNumbers(3, 5)` and store the result of the addition in the variable `result`. And so, the function returns the sum of the two numbers we supplied to the function.</p>
         <p>`console.log(result);` is used to output or display the value of `result` to the console. Specifically, `console` is an object in JavaScript that provides methods to interact with the browser's developer tool console. `log` is a method of the object `console`, and is used to output whatever is passed to it as an argument.</p>
         <p>In our case, `result` is the variable holding the value that is returned from the `addNumbers(3, 5)` function, which is 8. As a result, calling `console.log(result);` will print 8 to the console, allowing you to see the result of the function call.</p>
+        <h3>Objects in JavaScript</h3>
+        <p>Objects in JavaScript are collections of key-value pairs. Key-value pairs are used to store and access data. Consider the following:</p>
+        <pre><code>
+const person = {
+  name: 'Bob',
+  age: 30,
+  gender: 'male'
+};
+        </code></pre>
+        <p>In the example above, `name`, `age`, and `gender` are the keys, and "Bob", `30`, and "male" are the values. Keys (also called "properties") are simply the property names of an object. They represent the "labels" or "names" for the values stored inside the object. In our case, "Bob", `30`, and "male" are the values stored in the keys `name`, `age`, and `gender`. We can access the values of the keys of this object by using, for example, `console.log(person.name);`, which would of course output "Bob".</p>
+        <p>An array containing all keys of an object can be obtained using `Object.keys()`. `Object.keys()` is a JavaScript method that will return an array of an object's own enumerable property names (in this case, the keys of the object `person`). The syntax to do so is as follows: Object.keys(obj) where `obj` in `(obj)` is substituted with the name of the object whose keys we want to retrieve.</p>
+        <p>While both objects and arrays store data, objects use keys (keys can be strings, numbers, or symbols) to store and access data, whereas arrays use numeric indices (starting from 0) to store and access elements.
+</p>
+        <p>Values--which are mapped to keys--can be any data type, including objects.</p>
+        <p>As demonstrated, objects in JavaScript are used to store data in a structured way. They can also be used to create reusable code and they can also be used to create complex data structures.
+</p>
+        <p>The purpose of the key-value structure is so that data contained in an object can be organized in a flexible and readable way. Objects in JavaScript can store other objects or arrays as values, adding to their effectiveness as tools for managing data. Consider the following:
+</p>
+        <pre><code>
+let person = {
+  name: "John",
+  age: 30,
+  address: {
+    street: "123 Main St",
+    city: "Anytown"
+  },
+  hobbies: ["reading", "sports"]
+};
+        </code></pre>
+        <p>Here, the `address` key (property) is an object, and the `hobbies` key (property) is an array. Both are stored as values within the `person` object. This is an example of an object storing an object in JavaScript.</p>
+        <p>We declare objects using curly braces `{ }`, and the key-value pairs are separated by commas. Keys are always followed by a colon, and values can be followed by a comma.</p>
+        <p>The following is an example of an object in JavaScript, where `species`, `breed`, and `age` are keys (properties), and "dog", "Labrador", and "5" are the corresponding values for each key.</p>
+        <pre><code>
+const animal = {
+  species: 'dog',
+  breed: 'Labrador',
+  age: 5
+};
+        </code></pre>
     </div>
 </body>
 </html>
