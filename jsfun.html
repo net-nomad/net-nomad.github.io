@@ -182,5 +182,18 @@ const animal = {
 };
         </code></pre>
     </div>
+        <script>
+         window.addEventListener('DOMContentLoaded', (event) => {
+         // Select all text in the document
+         const bodyText = document.body.innerHTML;
+
+         // Regular expression to find words surrounded by backticks
+         const updatedText = bodyText.replace(/`(.*?)`/g, (match, p1) => {
+         return `<span class="red-text">${p1}</span>`;
+      });
+      // Set the updated HTML back to the body
+      document.body.innerHTML = updatedText;
+    });
+  </script>
 </body>
 </html>
