@@ -14,6 +14,7 @@ body {
 
 .red-text {
   color: red;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 /* Sidebar styles */
