@@ -98,7 +98,7 @@
 </p>
         <p>Apparently a vsftpd (very secure FTP daemon) server is running on port 21. We can clearly see that it's running version 2.3.4. The website for vsftpd shows that the software hasn't been updated since 2021. At its core it's just an FTP server for UNIX systems.</p>
         <p>A simple search using `searchsploit vsftpd` (very script kiddie of me, I know) shows that a couple of exploits do in fact exist for this service version.</p>
-        <p>Following that is port 22, which is running OpenSSH. All of us are aware of what OpenSSH does and what it's used for. For those who aren't, it's a protocol that allows for remote logins into a box. Nmap says that this version of OpenSSH is 4.7p1.</p>
+        <p>Following that is port 22, which is running OpenSSH. All of us are aware of what OpenSSH does and what it's used for. For those who aren't, it's a protocol that allows for remote logins into a box. Nmap says that this version of OpenSSH is 4.7p1, but it's important not to blindly assume that everything Nmap reports is 100% accurate.</p>
         <p>We then have on ports 139 and 445 the "netbios-ssn" service. Here, Samba is used. Samba is an open-source software suite that provides file and print services to SMB/CIFS clients. It's used so that Linux and Unix systems can interact with with Windows systems for the purpose of sharing files and printers across these different operating systems, which is all enabled by the SMB protocol.</p>
         <p></p>
     </div>
