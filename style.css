@@ -12,6 +12,10 @@ body {
     justify-content: center; /* Horizontally center the content */
 }
 
+.red-text {
+  color: red;
+}
+
 /* Sidebar styles */
 .sidebar {
     background-color: #141414; /* Slightly lighter black/gray background for sidebar */
