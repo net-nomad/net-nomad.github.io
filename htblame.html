@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Blog</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        // JavaScript to toggle sub-topics visibility
+        function toggleSubtopics(event) {
+            const subtopics = event.target.nextElementSibling; // Get the next sibling (sub-topic list)
+            if (subtopics.style.display === "block") {
+                subtopics.style.display = "none"; // Hide the sub-topics
+            } else {
+                subtopics.style.display = "block"; // Show the sub-topics
+            }
+        }
+    </script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Website Name -->
+        <h1>net-nomad</h1>
+        
+        <!-- Profile Image -->
+        <img src="https://avatars.githubusercontent.com/u/198267592?v=4" alt="Profile Image"> <!-- Replace with your actual image URL -->
+
+        <a class="about-me" href="" target="_blank">About Me</a>
+        
+        <!-- GitHub link -->
+        <a class="github-link" href="https://github.com/net-nomad" target="_blank">My GitHub</a>
+        
+        <!-- Topics heading -->
+        <div class="topics-heading">Topics</div>
+        
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">Browser Exploitation</a>
+        <div class="subtopics">
+            <a href="tech/article1.html">General Browser Architecture</a>
+        </div>
+        
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">Python</a>
+        <div class="subtopics">
+            <a href="travel/article1.html">The Fundamentals of Python</a>
+        </div>
+        
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">C++</a>
+        <div class="subtopics">
+            <a href="lifestyle/article1.html">The Fundamentals of C++</a>
+        </div>
+
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">Intel Assembly</a>
+        <div class="subtopics">
+            <a href="lifestyle/article1.html">The Fundamentals of Intel Assembly</a>
+        </div>
+
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">Penetration Testing</a>
+        <div class="subtopics">
+            <a href="lifestyle/article1.html">?</a>
+        </div>
+
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">ARM Assembly</a>
+        <div class="subtopics">
+            <a href="lifestyle/article1.html">The Fundamentals of ARM Assembly</a>
+        </div>
+
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">JavaScript</a>
+        <div class="subtopics">
+            <a href="jsfun.html">The Fundamentals of JavaScript</a>
+        </div>
+
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">C</a>
+        <div class="subtopics">
+            <a href="lifestyle/article1.html">The Fundamentals of C</a>
+        </div>
+
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">Debuggers</a>
+        <div class="subtopics">
+            <a href="lifestyle/article1.html">?</a>
+        </div>
+
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">Hack The Box</a>
+        <div class="subtopics">
+            <a href="lifestyle/htblame.html">Lame</a>
+        </div>
+    </div>
+    <!-- Main content -->
+    <div class="main-content">
+        <h1>Hack The Box Walkthrough: Lame</h1>
+        <h3>Feb 9 2025</h3>
+        <p>Lame is a Linux machine requiring only one exploit to get root access, making it easy to complete.</p>
+        <p>I begin, of course, by spawning the target machine. I'm connecting to it via my Kali Linux virtual machine. But before I do that, I load it up in VirtualBox using my latest snapshot. As usual, something goes wrong. Trying to load my latest snapshot gives me a result code that says "E_FAIL (0x80004005)". I do a bit of searching to find a fix so that I can get back on track. I find a video that basically says to run `bcedit /set hypervisorlaunchtype off` in cmd, which turns off the Hyper-V hypervisor in Windows (I should've mentioned earlier than I'm on 10). Whether this'll work or not isn't clear. As always, half the comment section of any given help video complains about the solution not working, while the other half says it works just fine. Both sides are equally vague and unhelpful.</p>
+      
+    </div>
+</body>
+</html>
