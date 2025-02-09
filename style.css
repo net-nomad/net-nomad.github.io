@@ -129,3 +129,25 @@ a {
 a:hover {
     color: lightblue; /* Light blue color when hovering over links */
 }
+
+/* Code Styling Section */
+
+/* Inline code */
+code {
+    font-family: 'Courier New', Courier, monospace; /* Monospaced font */
+    background-color: #f4f4f4; /* Light gray background */
+    padding: 2px 4px; /* Add some space around the code */
+    border-radius: 4px; /* Slight rounding of corners */
+    color: #d6336c; /* A distinct color for the text */
+}
+
+/* Code block */
+pre code {
+    font-family: 'Courier New', Courier, monospace; /* Monospaced font */
+    background-color: #282c34; /* Dark background */
+    color: #f8f8f2; /* Light text color for contrast */
+    padding: 10px;
+    border-radius: 4px;
+    display: block; /* Make it block-level so it takes up the full width */
+    overflow-x: auto; /* Allow horizontal scrolling if the line is too long */
+}
