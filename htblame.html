@@ -103,6 +103,65 @@
         <p>SMB itself is a network file sharing protocol primarily used by Windows systems, but Samba can be used to enable non-Windows systems (Linux and macOS) for example, to communicate with each other using SMB. Basically, Samba is a great tool for cross-platform sharing. For example, a printer attached to a Linux machine can be shared with Windows machines using Samba. As another example, a Windows machine or Linux server shares media files (e.g., music, videos) using Samba, which can be accessed by other devices on the network.</p>
         <p>One benefit of Samba is network integration, which allows Linux servers to act as file servers in a Windows network environment or vice versa.</p>
         <p>Now, why is "netbios-ssn" running on ports 139 AND 445? After a bit of digging, the answer seems to be that the SMB protocol originally ran ontop of NetBIOS using port 139. As the protocol was updated, SMB began using port 445 on top of a TCP stack, allowing SMB to work over the internet.</p>
+        <p>With some context, the question becomes: how do we interact with these services to compromise the target machine?</p>
+        <p>Well, Hack The Box speaks of a "famous backdoor" in the version of vsftpd running on the target machine. Also, there's a Metasploit module to exploit it. Let's figure out how to take advantage of this and see if it works.</p>
+        <p>I use the msfconsole command to open Metasploit. According to official documentation, you can search for various modules. In Metasploit, each module type seems to contain collections of methods to interact with a target host. We have—for example—"Payloads", "Exploit", and "Auxiliary" module types, to name a few. Each with different intended effects on the target host.</p>
+        <p>With this bit of info, I search the Metasploit document website for vsftpd, as that's the service we're trying to exploit. I find a module within the Exploit module type, and it's named "exploit/unix/ftp/vsftpd_234_backdoor". It sounds like it's exactly what I'm looking for, but I can't just using it without getting a bit of context first.</p>
+        <p>To understand a module before using it, we can go into the msf console and enter `info exploit/unix/ftp/vsftpd_234_backdoor`, which should give us some data that explains what the exploit is about.</p>
+        <p>Per the description, this exploit takes advantage of a backdoor introduced to the vsftpd archive in 2011. This is the "famous backdoor" Hack The Box was referring to, officially known as CVE-2011-2523. Obviously the backdoor was removed shortly after discovery, but the version running on our target host is still vulnerable. This highlights the importance of keeping software updated.</p>
+        <p>I then run `use exploit/unix/ftp/vsftpd_234_backdoor` to actually load the exploit. After that, I run `show options` to view the required parameters for delivering the exploit to the remote target. In this case, Metasploit needs to know the target hosts address and the port the vulnerable service is running on. Obviously it's port 21 for the vsftpd backdoor.</p>
+        <p>I use `set RHOSTS 10.129.148.70` so that the exploit is delivered to the specified IP address. And I ensure that it's delivered on port 21 using `set RPORT 21`. The final step is to enter `exploit`...but nothing happens. I don't have remote access to the target machine.</p>
+        <p>I pivot into a different direction. With a bit of Googling, I find the CVE I'm after: CVE-2007-2447. I confirm the existence of this CVE using Searchsploit. The Samba software on the target machine is running version 3.0.20, and is vulnerable to a command execution vulnerability. Now, I have to figure out how to take advantage of this. This CVE allows me to achieve remote code execution on the target. How does it work? According to NIST (National Institute of Standards and Technology):</p>
+        <p></p>
+        <p>Within the Ruby script, the author notes that no authentication is required to exploit this vulnerability. Upon sucessful exploitation, a shell should be returned to my machine.</p>
+        <p>I return to the Metasploit console, armed with knowledge and determination. This machine will be mine.</p>
+        <p>In the console, I run `search usermap` to find the appropriate script for exploitation. After that, I enter `use` to load it. As before, I want to get some data about this exploit, and so I use `info` followed by the path to the exploit. Sure enough, it's the one I'm looking for.</p>
+        <p>I run through the process of setting the desired target and the port for to communicate with the vulnerable service, but this time I'm targeting port 445 instead of 21, as we're targeting Samba, not vsftpd.</p>
+        <p>After that, I enter `exploit`, and a reverse TCP handler is created on my end at port 4444, but I then receive the message "Exploit completed, but no session was created." It's time to find answers.</p>
+        <p>This seems to be an issue other Hack The Box players have encountered while solving certain machines. One player suggests allowing the port you want to receive the reverse connection on in UFW (Uncomplicated Firewall), which makes sense to me. The only problem is that I don't even have UFW installed. It seems I've encountered yet another roadblock.</p>
+        <p>Someone else suggests combing through Metasploit's many payloads, as the exploit itself doesn't have one specified. This issue was hinted at within my own terminal, because when I ran `use exploit/multi/samba/usermap_script`, the console responded with `No payload configured, defaulting to cmd/unix/reverse_netcat` and carried on as normal; I didn't think twice about it.</p>
+        <p>Anyway, the user says that you can select and specify a payload witin Metasploit by using `show payloads`, and I proceeded to do just that. I then receive 44 different possible payloads that I assume are compatible with my exploit. The user adds that depending on the payload selected, you may have to specify certain parameters such as LHOST and LPORT before delivering the exploit. You can see what's necessary by using `options` after selecting the payload you want to use.</p>
+        <p>Out of the 44 selectable payloads, it looks like our exploit defaulted to 27 `payload/cmd/unix/reverse_netcat`, which didn't work. It looks like this is going to require a bit of trial and error.</p>
+        <p>Using `set PAYLOAD`, I select #41, a reverse TCP SSH payload.</p>
+        <p>The module (exploit) obviously requires specifying the remote host and the port that contains the service which is to be exploited, but the payload itself allows the user to specify the LHOST (local host) and LPORT (listening port). Of course, I'm the local host, and the port SSH is associated with port 22. By default, the payload knows the IP address of my machine, and it assumes that I want to recieve the connection on port 22 (which again is typical for SSH connections). It seems like everything is set.</p>
+        <p>And again, failure. This time, a new error message: `Exploit failed: RuntimeError ReverseSSH failed to load. OpenSSL version 3.0.1 not supported.`</p>
+        <p>Frustrating to say the least. I can either go back to the drawingboard or continue experimenting with different payloads. I'll give another payload a shot. The next payload uses socat.</p>
+        <p>...and before you know it, I found a solution!</p>
+        <p>Using #15 `payload/cmd/unix/bind_socat_udp` seems to have worked well. After setting the exploit to use that payload, I checked the options. Then:</p>
+        <p>1. I ran `set RHOST 10.129.148.70` (the target machine)</p>
+        <p>2. I ran `set RPORT 445` (I assume this is to define the port on the target machine you want to connect to).</p>
+        <p>3. I ran `set LPORT 1337` (I assume that this sets the port that Metasploit is 'listening' on).</p>
+        <p>4. I proceeded to run the exploit, and it didn't work. I got the same generic console message "[*] Exploit completed, but no session was created."</p>
+        <p>I was feeling defeated after that, but I kept going. Didn't I tell you this machine is mine?</p>
+        <p>However, I noticed that the console also said "Started bind UDP handler against 10.129.148.70:1337", which stood out to me because shouldn't it say "10.129.148.70:445"? After all, that's the port I'm trying to reach.</p>
+        <p>Once again I checked the options. I tried the exact steps again just to be sure. Then, feeling that it was an error of my own doing, I modified the options. This time, I ran `set LPORT 445`, and by running the exploit again, I popped a shell on the Lame machine as root! Why exactly this worked, I'm not sure, but this is something I'm going to figure out.</p>
+        <p>With root access, my goal is to find both the makis user's and root's flags. I navigate to root's home directory, and inside is a folder titled "makis". I quickly navigate deeper, using `ls -a` to find all the contents of the folder. "user.txt" is what I'm after, so I use `cat` to read the contents, and with that, one part of the challenge is completed.</p>
+        <p>I go back using `cd /home`, followed by `cd ..` to go back to the root directory. Here, I spot a folder titled "root" and I enter inside. It contains "root.txt", which is what I'm after. Again, we use `cat` to read the contents and get the flag.</p>
+        <p>And with that, I've completed the box! Though it's an older and easier machine, navigating the unintentional technical problems introduced by its age were frustrating at the moment, but worth it in the end.</p>
+        <p>...but we're not done just yet. There's a bit more to complete as a bonus challenge, which I readily accept.</p>
+        <p>This challenge allows me to understand why the initial exploit attempt (vsftpd) failed. With root privileges, we can inspect the machine and its configurations, rather than performing mere guesswork using only Nmap.</p>
+        <p>Hack The Box reminds me that my initial Nmap scan showed four open TCP ports, but if I run netstat -tlnp, we see that many more ports are listening, including "ones on 0.0.0.0 and the boxes external IP", so they—according to Hack The Box—should be accessible. Why aren't they? Hack The Box goes on to ask: what must be blocking connections to these ports?</p>
+        <p>My answer? A firewall, of course. On the Lame machine, iptables is the firewall used.</p>
+        <p>Note: `netstat -tlnp` provides a list of TCP ports that are currently opening and listening, along with process names and PIDs associated with each port. We can use this command for troubleshooting and monitoring network activity, especially in cases where you need to know which services or applications are using specific ports.
+</p>
+        <p>The `t` in the command shows TCP connections, the `l` displays only listening sockets (ports waiting for incoming connections), the `n` displays numerical addresses and port numbers instead of resolving hostnames and service names, and lastly the `p` shows the process ID (PID) and name of the program that is using the corresponding port.</p>
+        <p>Netstat itself is used for gathering network status and protocol statistics, routing tables, and more, as implied in its name. I find it useful when I'm concerned that two processes may be functioning incorrectly because they share the same port(s).</p>
+        <p>Determining which port starts listening when the vsftpd backdoor is triggered is as simple as looking through the source code of the backdoor script, which was written in Ruby. Per this line, we know the backdoor listens on port 6200 of the Lame machine:</p>
+        <p>`nsock = self.connect(false, {'RPORT' => 6200}) rescue nil`</p>
+        <p>And now I'm actually done! This was a fun machine. Easy, sure, but fun nonetheless. I explored Metasploit, shells, Ruby, netstat, vsftpd, Samba, troubleshooting, multiple CVEs, among other things. I'm ready to tackle the next box.</p>
     </div>
+        <script>
+         window.addEventListener('DOMContentLoaded', (event) => {
+         // Select all text in the document
+         const bodyText = document.body.innerHTML;
+
+         // Regular expression to find words surrounded by backticks
+         const updatedText = bodyText.replace(/`(.*?)`/g, (match, p1) => {
+         return `<span class="red-text">${p1}</span>`;
+      });
+      // Set the updated HTML back to the body
+      document.body.innerHTML = updatedText;
+    });
+  </script>
 </body>
 </html>
