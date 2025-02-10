@@ -93,7 +93,9 @@
         <p>I start by patiently waiting for the machine to spawn...</p>
         <p>Any day now...</p>
         <p>I have a habit of pinging the target machine to confirm connectivity. I receive consistent replies from the target IP address 10.129.197.124, so I'm ready to go.</p>
+        <img src="images/htbblue1.PNG" alt="htbblue1.PNG">
         <p>I then run `sudo nmap 10.129.197.124 -sV -O -T3 -oN scan001.txt`. I append `sV` to gather information about the services on open ports, `-O` for operating system information, `-T3` to set the speed of the scan, and `-oN` to output the results of the scan into a text file titled "eternalbluescan".</p>
+        <img src="images/htbblue2.PNG" alt="htbblue2.PNG">
         <p>We can see that the target machine seemingly has many ports open. The most interesting ones are ports 445, 139, and 135. The rest are "ephemeral ports", meaning ports that are temporary network communication endpoints used by client applications to establish connections with server applications over the internet or a local network. These ports are dynamically assigned by the operating system from a predefined range and are used for the duration of a communication session. Once a session concludes, the ephemeral port is released and becomes available for reuse.</p>
         <p>In the Transmission Control Protocol (TCP) and User Datagram Protocol (UDP), ephemeral ports facilitate client-server communication. When a client initiates a connection to a server, the operating system assigns an ephemeral port number to the client for that specific session. This allows multiple client applications to establish simultaneous connections to a server without interference.</p>
         <p>As an example, Windows operating systems typically use port numbers from 49152 to 65535 for ephemeral ports (the ephemeral ports probed by Nmap range from 49152 to 49157). Other operating systems may use different ranges.</p>
@@ -125,17 +127,25 @@ Also of note: RPC fits into the Application layer (7) of the OSI model. This is 
         <p>Resetting the virtual machine made it freeze. Just great. F****** piece of s***. At this point, I have no choice but to close it and start again. Do you even remember what we were trying to do before all of this nonsense?</p>
         <p>The drag and drop feature is deciding not to work today, and I have more pressing matters at hand. I cave in and login to my HTB account to download the OpenVPN file from inside the virtual machine. I'm once again connected, next I'm going to ping the machine to confirm connectivity, then I'll try the Nmap scan I crafted earlier to confirm that we exploit this machine using EternalBlue.</p>
         <p>We're connected! Next, I run the Nmap scan `sudo nmap 10.129.170.187 -sV --script=smb-vuln-ms17-010.nse -p 445 -oN HARIS-PC.txt`. I know this service is vulnerable thanks to the Nmap script smb-vuln-ms17-010, which is obviously designed to search for susceptibility to exploit we're after.</p>
+        <img src="images/htbblue3.PNG" alt="htbblue3.PNG">
         <p>Now, how do I exploit this? Since this is just a beginner box, I'll be using Metasploit. You might recall it from my Lame box post. It's as easy as `msfconsole`, then `search ms17-010` (Microsoft Security Bulletin's name for EternalBlue). The first module listed is `exploit/windows/smb/ms17_010_eternalblue` (the one I'm after). Below it, we have a list of targets, which include various versions of Windows, from 7, to Server, all the way to 10. A wide-reaching exploit, no doubt.</p>
+        <img src="images/htbblue4.PNG" alt="htbblue4.PNG">
         <p>I follow with `use exploit/windows/smb/ms17_010_eternalblue`, and the exploit is assigned a reverse TCP payload. I then set the RHOST as 10.129.170.187, and the RPORT is already configured to 445 (TCP). Using `show options` we can see that there are additional parameters for passing a username, domain, and password for authentication, but I'm not going to touch those. The LHOST is set to my IP address, and the LPORT is 4444. Let's run this.</p>
         <p>Everything seemed to be working at first, and I gave Metasploit a few minutes as it looped through various stages of the exploit, but ultimately, it failed:</p>
+        <img src="images/htbblue5.PNG" alt="htbblue5.PNG">
         <p>It would be nice if I could just have something work the first time around...</p>
         <p>After a bit of searching for answers, I tried setting the LHOST to my VPN's IP address. Let's see if that makes a difference:</p>
+        <img src="images/htbblue6.PNG" alt="htbblue6.PNG">
         <p>It worked! I enter `shell` to interact with the Windows machine.</p>
+        <img src="images/htbblue7.PNG" alt="htbblue7.PNG">
         <p>Using Meterpreter, I have an interactive shell which I can use to explore my target and execute code. With that, I run `net share` to enumerate all the SMB shares on Blue, which turns out to be 5. I then use `whoami` to determine which user I'm logged in as on Blue, which turns out to be "nt authority\system". I have no idea what this means, so I'm going to do some searching.</p>
+        <img src="images/htbblue8.PNG" alt="htbblue8.PNG">
         <p>Per a Microsoft employee, nt authority\system is a built-in Windows account, and it has the highest level of privileges on a local system. It's supposedly more powerful than an administrator account and has unrestricted access to all local system resources and processes.</p>
         <p>Basically, I own this machine now.</p>
+        <img src="images/htbblue9.PNG" alt="htbblue9.PNG">
         <p>I cd into the Users directory `C:\Users` and use `dir` to list all of the potential folders and files inside. haris is listed, so I go into that folder first, and then into the Desktop folder. Here, I find the txt file. In cmd you can just use `type [file name]` (or `type [path to file]`) to read the contents of whatever you pass to it. One flag down, one more to go.</p>
         <p>`cd ..` or `cd -` to go backwards, and into the Administrator folder. Inside the Desktop folder is the text file, and with that, I'm done.</p>
+        <img src="images/htbblue11.PNG" alt="htbblue11.PNG">
         <p>I revisited Metasploit, delivered a payload for a classic exploit, fixed a few annoying problems, learned a bit about RPC/ephemeral ports, and navigated through a poorly defended Windows machine. A stupidly simple box by today's standards, but fun. I'm growing an apetite for harder boxes. Who doesn't enjoy being challenged?</p>
         <script>
          window.addEventListener('DOMContentLoaded', (event) => {
