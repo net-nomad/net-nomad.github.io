@@ -1,1 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Blog</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        // JavaScript to toggle sub-topics visibility
+        function toggleSubtopics(event) {
+            const subtopics = event.target.nextElementSibling; // Get the next sibling (sub-topic list)
+            if (subtopics.style.display === "block") {
+                subtopics.style.display = "none"; // Hide the sub-topics
+            } else {
+                subtopics.style.display = "block"; // Show the sub-topics
+            }
+        }
+    </script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Website Name -->
+        <h1>net-nomad</h1>
+        
+        <!-- Profile Image -->
+        <img src="https://avatars.githubusercontent.com/u/198267592?v=4" alt="Profile Image"> <!-- Replace with your actual image URL -->
 
+        <a class="about-me" href="" target="_blank">About Me</a>
+        
+        <!-- GitHub link -->
+        <a class="github-link" href="https://github.com/net-nomad" target="_blank">My GitHub</a>
+        
+        <!-- Topics heading -->
+        <div class="topics-heading">Topics</div>
+        
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">Browser Exploitation</a>
+        <div class="subtopics">
+            <a href="tech/article1.html">General Browser Architecture</a>
+        </div>
+        
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">Python</a>
+        <div class="subtopics">
+            <a href="travel/article1.html">The Fundamentals of Python</a>
+        </div>
+        
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">C++</a>
+        <div class="subtopics">
+            <a href="lifestyle/article1.html">The Fundamentals of C++</a>
+        </div>
+
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">Intel Assembly</a>
+        <div class="subtopics">
+            <a href="lifestyle/article1.html">The Fundamentals of Intel Assembly</a>
+        </div>
+
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">Penetration Testing</a>
+        <div class="subtopics">
+            <a href="lifestyle/article1.html">?</a>
+        </div>
+
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">ARM Assembly</a>
+        <div class="subtopics">
+            <a href="lifestyle/article1.html">The Fundamentals of ARM Assembly</a>
+        </div>
+
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">JavaScript</a>
+        <div class="subtopics">
+            <a href="jsfun.html">The Fundamentals of JavaScript</a>
+        </div>
+
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">C</a>
+        <div class="subtopics">
+            <a href="lifestyle/article1.html">The Fundamentals of C</a>
+        </div>
+
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">Debuggers</a>
+        <div class="subtopics">
+            <a href="lifestyle/article1.html">?</a>
+        </div>
+
+        <a href="javascript:void(0);" onclick="toggleSubtopics(event)">Hack The Box</a>
+        <div class="subtopics">
+            <a href="htblame.html">Lame</a>
+            <a href="htbblue.html">Blue</a>
+        </div>
+    </div>
+    <!-- Main content -->
+    <div class="main-content">
+        <h1>Hack The Box: Monitored</h1>
+        <h3>Feb 11 2025</h3>
+        <p>Wanting a greater challenged, I've decided to take on my first medium-difficultly box in HTB. This one doesn't have many pwns, and has just turned a year old. The "About" section is as follows:</p>
+        <p>"Monitored is a medium-difficulty Linux machine that features a Nagios instance. Credentials for the service are obtained via the SNMP protocol, which reveals a username and password combination provided as command-line parameters. Using the Nagios API, an authentication token for a disabled account is obtained, which leads to access to the application's dashboard. From there, a SQL injection (`[CVE-2023-40931](https://nvd.nist.gov/vuln/detail/CVE-2023-40931)`) is abused to obtain an administrator API key, with which a new admin account is created and used to run arbitrary commands on the instance, leading to a reverse shell. Finally, `sudo` access to a bash script is abused to read the `root` user's SSH key and authenticate as `root`."</p>
+        <p>With that, I dive in.</p>
+        <p>My first question is: what even is Nagios? I've read about it while skimming detali-sparse, generalized security articles, but I can't tell you what it is or why it's important. So, as any decent hacker should, I search for information.</p>
+        <p>On its homepage: "Nagios is a powerful monitoring system that enables organizations to identify and resolve IT infrastructure problems before they affect critical business processes."</p>
+        <p>Wow, that's really helpful.</p>
+        <p>Scrolling down, I learn that Nagios is some kind of IT infrastructure monitoring software that ensures systems, applications, and services area functioning properly. When something goes wrong, Nagios is able to alert IT staff of the problem so that they can begin fixing whatever it is. This is important because intervening quickly can stop outages from being as impactful on customers and business processes.
+
+Nagios has an open-source community that's contributed "thousands of plugins and add-ons", and Nagios projects can be used to build monitoring solutions.
+
+So we have three individual Nagios projects: Nagios Core, Nagios Plugins, and Nagios Mod Gearman, each is distributed as part of the Nagios Core Services Platform (CSP) download for "ease of use" and rapid deployment. You download the Nagios CSP to get access to smart monitoring wizards, informative reports, and insightful dashboards. Interesting so far.
+
+I'm going to take a look at Nagios Core's documentation, as it's described as a "monitoring engine" and just grabs my attention, for some reason.</p>
+        <p></p>
+        <p></p>
+        <p></p>
+        <p></p>
+        <script>
+         window.addEventListener('DOMContentLoaded', (event) => {
+         // Select all text in the document
+         const bodyText = document.body.innerHTML;
+
+         // Regular expression to find words surrounded by backticks
+         const updatedText = bodyText.replace(/`(.*?)`/g, (match, p1) => {
+         return `<span class="red-text">${p1}</span>`;
+      });
+      // Set the updated HTML back to the body
+      document.body.innerHTML = updatedText;
+    });
+  </script>
+    </div>
+</body>
+</html>
