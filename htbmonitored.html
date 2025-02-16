@@ -114,7 +114,7 @@ For some protocols, even port numbers are used to indicate client-side listening
 
 I noticed that SNMP exists on ports 161 AND 162. This is because manager devices using SNMP send requests to SNMP agents via 161. These requests range from commands to retrieve information to modifying device settings. 162 is used by the agents to send traps to managers. Traps alert managers to specific events or issues on the network device without the manager having to request the information. Both ports are essential for the functioning of SNMP.
 
-Armed with that knowledge, I now seek to exploit SNMP. We know from the scan that the SNMP server could be v1, and that version happens to be relatively insecure. Communications between the manager and agent is plaintext, with SNMPv1. Apparently, v1 can only handle 32-bit counter values before rolling over. However, there's also a mention of SNMPv3 in the scan. I'm not sure how SNMPv1 and SNMPv3 are being used in relation to each other, if at all.
+Armed with that knowledge, I now seek to exploit SNMP. We know from the scan that the SNMP service could be v1, and that version happens to be relatively insecure. Communications between the manager and agent is plaintext, with SNMPv1. Apparently, v1 can only handle 32-bit counter values before rolling over. However, there's also a mention of SNMPv3 in the scan. I'm not sure how SNMPv1 and SNMPv3 are being used in relation to each other, if at all.
 
 I turn to snmpwalk to retrieve management values. Snmpwalk does this by using SNMPGETNEXT requests to query devices on a network for information.
 
