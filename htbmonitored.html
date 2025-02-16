@@ -133,10 +133,9 @@ I turn to snmpwalk to retrieve management values. Snmpwalk does this by using SN
 
 Snmpwalk returns a ton of output, some of which isn't very readable, as you can see:</p>
           <img src="images/htbmonitored1.PNG" alt="htbmonitored1.PNG">
-          <p>To make sense of this, I edit my host's snmp.conf in /etc/snmp/snmp.conf, making sure to uncomment `mibdirs' as shown:</p>
+          <p>To make sense of this, I edit my host's snmp.conf in /etc/snmp/snmp.conf, making sure to uncomment `mibdirs` as shown:</p>
           <img src="images/htbmonitored2.PNG" alt="htbmonitored2.PNG">
           <p>I love Vim!</p>
-
           <p>`esc` then `:wq` to save and exit.
 
 Now, I'm going to download snmp-mibs-downloader. It's designed for managing MIB (Management Information Base) files, so I'm going to need it shortly.
