@@ -99,29 +99,18 @@
 
 Nagios has an open-source community that's contributed "thousands of plugins and add-ons", and Nagios projects can be used to build monitoring solutions.
 
-So we have three individual Nagios projects: Nagios Core, Nagios Plugins, and Nagios Mod Gearman, each is distributed as part of the Nagios Core Services Platform (CSP) download for "ease of use" and rapid deployment. You download the Nagios CSP to get access to smart monitoring wizards, informative reports, and insightful dashboards. Interesting so far.
-
-I'm going to take a look at Nagios Core's documentation, as it's described as a "monitoring engine" and just grabs my attention, for some reason.</p>
-        <p>But wait! I don't want to get ahead of myself. I haven't even spawned the target machine yet, nor have I started my Kali VM. Let's do that, and run a reconnaissance scan afterwards to see what I can find.
-
-I initiate the VPN connection, ping 10.129.230.96, and start formulating an Nmap scan so I can know what I'm working with. I run a basic `sudo nmap -sV -O -sC -T3 10.129.230.96` and as we can see, the host's name is nagios.monitored.htb and ports 22 (OpenSSH), 80 (HTTP), 389 (OpenLDAP), and 443 (HTTPS) are supposedly open. The web server is Apache version 2.4.56.
-
-I also run a UDP scan, simply by appending `-sU` to the previous scan and running it again. UDP scans can take signicantly longer than other types, due to the nature of the protocol. It's connectionless, so Nmap doesn't receive an acknowledgement that the data has been received by the target unless the service on target port responds. Because of this, the state of the port cannot be immediately determined, which leads to longer wait times. 
-
-So far, 6 minutes have gone by during this UDP scan. I hope it's worth it.
-
-9 minutes down the drain...
-
-11 minutes...
-
-After like 20 minutes I've finally gotten my scan results back:</p>
+So we have three individual Nagios projects: Nagios Core, Nagios Plugins, and Nagios Mod Gearman, each is distributed as part of the Nagios Core Services Platform (CSP) download for "ease of use" and rapid deployment. You download the Nagios CSP to get access to smart monitoring wizards, informative reports, and insightful dashboards. Interesting so far. I'm going to take a look at Nagios Core's documentation, as it's described as a "monitoring engine" and just grabs my attention, for some reason.</p>
+        <p>But wait! I don't want to get ahead of myself. I haven't even spawned the target machine yet, nor have I started my Kali VM. Let's do that, and run a reconnaissance scan afterwards to see what I can find.</p>
+        <p>I initiate the VPN connection, ping 10.129.230.96, and start formulating an Nmap scan so I can know what I'm working with. I run a basic `sudo nmap -sV -O -sC -T3 10.129.230.96` and as we can see, the host's name is nagios.monitored.htb and ports 22 (OpenSSH), 80 (HTTP), 389 (OpenLDAP), and 443 (HTTPS) are supposedly open. The web server is Apache version 2.4.56. I also run a UDP scan, simply by appending `-sU` to the previous scan and running it again. UDP scans can take signicantly longer than other types, due to the nature of the protocol. It's connectionless, so Nmap doesn't receive an acknowledgement that the data has been received by the target unless the service on target port responds. Because of this, the state of the port cannot be immediately determined, which leads to longer wait times.</p>
+        <p>So far, 6 minutes have gone by during this UDP scan. I hope it's worth it.</p>
+        <p>9 minutes down the drain...</p>
+        <p>11 minutes...</p>
+        <p>After like 20 minutes I've finally gotten my scan results back:</p>
         <p>On the UDP side of things, ports 68 (DHCP), 123 (NTP), 161 and 162 (SNMP) are open. We have a wealth of information about the SNMPv1 server likely due to an Nmap script used during the scan.
-
 For some protocols, even port numbers are used to indicate client-side listening, and odd numbers are for server-side listening. The DHCP service is client-side listening. And if you didn't know already, DHCP is for automatically assigning IP addresses and other configuration parameters to devices on a network. The process of setting up and managing IP addresses is made easier by DHCP, because it dynamically allocates IP addresses as devices connect to the network. This is especially helpful in large networks, as manual IP address configuration would be time-consuming and more prone to errors. With DHCP, you don't have to worry about setting the IP address of a device, the protocol does it for you. DHCP handles the process by dynamically providing each device with not only an IP address, but also a subnet mask, default gateway, and other necessary network configuration settings.</p>
         <p>Connecting to http://10.129.230.96 gives me this web page:</p>
-        <p>Per the "About" section of this box, SNMP is what I should be targeting next. What is SNMP anyway?
-
-This protocol is used for sharing information among various devices on a network, regardless of their hardware or software. Architecturally, you have "managers" which are servers that collect and process information about devices on the network. Following managers are "agents", and they can be any type of device or device component that's connected to the network. They can be computers, phones, printers, network switches, etc. There's a data hierarchy within SNMP. It does in fact operate on a client-server model, but it also uses event-driven communication through SNMP traps or polling, which provide real-time updates about network events to management systems.
+        <p>Per the "About" section of this box, SNMP is what I should be targeting next. What is SNMP anyway?</p>
+        <p>SNMP is used for sharing information among various devices on a network, regardless of their hardware or software. Architecturally, you have "managers" which are servers that collect and process information about devices on the network. Following managers are "agents", and they can be any type of device or device component that's connected to the network. They can be computers, phones, printers, network switches, etc. There's a data hierarchy within SNMP. It does in fact operate on a client-server model, but it also uses event-driven communication through SNMP traps or polling, which provide real-time updates about network events to management systems.
 
 I noticed that SNMP exists on ports 161 AND 162. This is because manager devices using SNMP send requests to SNMP agents via 161. These requests range from commands to retrieve information to modifying device settings. 162 is used by the agents to send traps to managers. Traps alert managers to specific events or issues on the network device without the manager having to request the information. Both ports are essential for the functioning of SNMP.
 
